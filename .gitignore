@@ -112,3 +112,7 @@ gradlew.bat
 !Assets/ExternalDependencyManager/
 !Assets/Plugins/Android/
 !Assets/Plugins/iOS/
+
+# Ignore Firebase desktop libraries (very large)
+Assets/Firebase/Plugins/x86_64/
+Assets/Firebase/Plugins/x86/
