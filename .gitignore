@@ -73,3 +73,42 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+###############################################
+# ADDITIONAL IGNORE RULES FOR FIREBASE (UNITY)
+###############################################
+
+# --- iOS CocoaPods (Firebase) ---
+Pods/
+Podfile
+Podfile.lock
+*.xcworkspace
+
+# Xcode export ignore
+ExportedProject/
+DerivedData/
+
+# Xcode project except pbxproj (required)
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+
+# --- Firebase Android Gradle caches ---
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+**/build/
+
+# --- Optional: ignore metadata for Firebase config (safe) ---
+**/GoogleService-Info.plist.meta
+**/google-services.json.meta
+
+###############################################
+# DO NOT ignore these (Firebase requires them)
+###############################################
+!Assets/**/GoogleService-Info.plist
+!Assets/**/google-services.json
+!Assets/Firebase/
+!Assets/ExternalDependencyManager/
+!Assets/Plugins/Android/
+!Assets/Plugins/iOS/
