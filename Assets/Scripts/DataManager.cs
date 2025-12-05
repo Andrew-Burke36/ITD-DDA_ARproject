@@ -16,8 +16,13 @@ public class DataManager : MonoBehaviour
     public TMP_Text validationText;
 
     DatabaseReference mDatabaseRef;
-
+    UIManager uiManagerRef;
     
+
+    private IEnumerator Delay()
+    {
+        yield return new WaitForSeconds(2.5f);
+    }
 
     public void SignUp()
     {
@@ -58,7 +63,10 @@ public class DataManager : MonoBehaviour
             if (signUpTask.IsCompleted)
             {
                 var uid = signUpTask.Result.User.UserId;
-                validationText.text = $"Sign-up completed successfully!, Id: {uid}";
+                validationText.text = $"Sign-up completed successfully!";
+
+                StartCoroutine(Delay());
+                uiManagerRef.SwitchUI();
             }
         });
     }
@@ -99,7 +107,10 @@ public class DataManager : MonoBehaviour
             if (task.IsCompleted)
             {
                 var uid = signInTask.Result.User.UserId;
-                validationText.text = $"Sign-in completed successfully!, Id: {uid}";
+                validationText.text = $"Sign-in completed successfully!";
+
+                StartCoroutine(Delay());
+                uiManagerRef.CloseUI();
             }
         });
     }
@@ -148,6 +159,7 @@ public class DataManager : MonoBehaviour
     void Start()
     {
         mDatabaseRef = FirebaseDatabase.DefaultInstance.RootReference;
+        uiManagerRef = FindFirstObjectByType<UIManager>();
 
         // WriteNewGun("1", "Pistol", "classic", 10, "Medium", 15);
         // WriteNewGun("2", "Rifle", "Vandal", 35, "Long", 30);
