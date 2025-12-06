@@ -6312,11 +6312,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trackedImageManager: {fileID: 1217941331}
   placeablePrefabs:
-  - {fileID: 7441906011514951506, guid: fd486a7bce3ef4671bdedbbb61c35376, type: 3}
-  - {fileID: 5099408529483877807, guid: 1b1583352a6d641219f5c9bf53895007, type: 3}
-  - {fileID: 1503710591004809512, guid: baa9ed724270843178a4352667b26399, type: 3}
-  - {fileID: 2032408754163859858, guid: 3c16674e524504f85bc594e2eb4bcfe7, type: 3}
-  - {fileID: 513661256488743713, guid: 5886a6be614234a798b3b4796432c867, type: 3}
+  - {fileID: 3726382379529001713, guid: 5886a6be614234a798b3b4796432c867, type: 3}
+  - {fileID: 3433534118712933678, guid: 3fce60aa174a241d4a961e317fe2a3d5, type: 3}
+  - {fileID: 3609126388340744572, guid: 44bd1667c08504033aa6cd7d7dab6823, type: 3}
+  - {fileID: 9160781306251515160, guid: 3c16674e524504f85bc594e2eb4bcfe7, type: 3}
+  - {fileID: 2960117788628319526, guid: d56bf0fad3e124f4ea535d581d45f0d2, type: 3}
 --- !u!114 &1217941331
 MonoBehaviour:
   m_ObjectHideFlags: 0
