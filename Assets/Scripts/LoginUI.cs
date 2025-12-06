@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class LoginUI : MonoBehaviour
 {
 
     public Button signUpButton;

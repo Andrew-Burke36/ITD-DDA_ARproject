@@ -16,7 +16,7 @@ public class DataManager : MonoBehaviour
     public TMP_Text validationText;
 
     DatabaseReference mDatabaseRef;
-    UIManager uiManagerRef;
+    LoginUI uiManagerRef;
     
 
     private IEnumerator Delay()
@@ -159,7 +159,7 @@ public class DataManager : MonoBehaviour
     void Start()
     {
         mDatabaseRef = FirebaseDatabase.DefaultInstance.RootReference;
-        uiManagerRef = FindFirstObjectByType<UIManager>();
+        uiManagerRef = FindFirstObjectByType<LoginUI>();
 
         // WriteNewGun("1", "Pistol", "classic", 10, "Medium", 15);
         // WriteNewGun("2", "Rifle", "Vandal", 35, "Long", 30);
