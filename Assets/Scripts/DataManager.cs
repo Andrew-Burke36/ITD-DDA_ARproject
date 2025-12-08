@@ -16,7 +16,7 @@ public class DataManager : MonoBehaviour
     public TMP_Text validationText;
 
     DatabaseReference mDatabaseRef;
-    LoginUI uiManagerRef;
+    uiManager uiManagerRef;
     
 
     private IEnumerator Delay()
@@ -110,7 +110,8 @@ public class DataManager : MonoBehaviour
                 validationText.text = $"Sign-in completed successfully!";
 
                 StartCoroutine(Delay());
-                uiManagerRef.CloseUI();
+                uiManagerRef.DisablePages("LoginUI");
+                uiManagerRef.EnablePages("HomePage");
             }
         });
     }
@@ -159,7 +160,7 @@ public class DataManager : MonoBehaviour
     void Start()
     {
         mDatabaseRef = FirebaseDatabase.DefaultInstance.RootReference;
-        uiManagerRef = FindFirstObjectByType<LoginUI>();
+        uiManagerRef = FindFirstObjectByType<uiManager>();
 
         // WriteNewGun("1", "Pistol", "classic", 10, "Medium", 15);
         // WriteNewGun("2", "Rifle", "Vandal", 35, "Long", 30);
