@@ -18,3 +18,16 @@ public class Dog
         // function here
     }
 }
+
+
+public class Player
+{
+    public string Username;
+    public string Email;
+
+    public Player(string email, string username)
+    {
+        Email = email;
+        Username = username;
+    }
+}

@@ -17,30 +17,19 @@ public class uiManager : MonoBehaviour
     public string loginPrompt = "Don't have an account yet?";
 
     public GameObject loginUI;
+    public GameObject signUpUI;
 
     [Header("Home Page UI")]
     public GameObject homePageUI;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
     /// <summary>
-    ///  Closes the current UI panel.
+    ///  Switches the UI panel for the login and sign up function
     /// </summary>
     public void SwitchUI()
     {
-        signUpButton.gameObject.SetActive(!signUpButton.gameObject.activeSelf);
-        loginButton.gameObject.SetActive(!loginButton.gameObject.activeSelf);
+       // Toggles the UI of the panels
+       loginUI.SetActive(!loginUI.activeSelf);
+       signUpUI.SetActive(!signUpUI.activeSelf);
 
         if (togglePromptText != null)
         {

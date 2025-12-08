@@ -11,9 +11,15 @@ using TMPro;
 public class DataManager : MonoBehaviour
 {
     // TM textfields;
+    [Header("Login Input fields")]
     public TMP_InputField EmailInput;
     public TMP_InputField PasswordInput;
     public TMP_Text validationText;
+
+    [Header("SignIn input fields")]
+    public TMP_InputField SignInUsernameInput;
+    public TMP_InputField SignInEmailInput;
+    public TMP_InputField SignInPasswordInput;
 
     DatabaseReference mDatabaseRef;
     uiManager uiManagerRef;
@@ -26,7 +32,15 @@ public class DataManager : MonoBehaviour
 
     public void SignUp()
     {
-        var signUpTask = FirebaseAuth.DefaultInstance.CreateUserWithEmailAndPasswordAsync(EmailInput.text, PasswordInput.text);
+        var signUpTask = FirebaseAuth.DefaultInstance.CreateUserWithEmailAndPasswordAsync(SignInEmailInput.text, SignInPasswordInput.text);
+
+        void CreatePlayerDetails(string email, string username)
+        {
+            Player newPlayer = new Player(email, username);
+            string json = JsonUtility.ToJson(newPlayer);
+
+            mDatabaseRef.Child("Players").Child(signUpTask.Result.User.UserId).SetRawJsonValueAsync(json);
+        }
 
         signUpTask.ContinueWithOnMainThread(signUpTask =>
         {
@@ -67,6 +81,9 @@ public class DataManager : MonoBehaviour
 
                 StartCoroutine(Delay());
                 uiManagerRef.SwitchUI();
+
+                // Sends the player's details and player profile to the databaes
+                CreatePlayerDetails(SignInEmailInput.text, SignInUsernameInput.text);
             }
         });
     }
@@ -111,7 +128,7 @@ public class DataManager : MonoBehaviour
 
                 StartCoroutine(Delay());
                 uiManagerRef.DisablePages("LoginUI");
-                uiManagerRef.EnablePages("HomePage");
+                uiManagerRef.EnablePages("HomePage");                
             }
         });
     }
@@ -161,16 +178,5 @@ public class DataManager : MonoBehaviour
     {
         mDatabaseRef = FirebaseDatabase.DefaultInstance.RootReference;
         uiManagerRef = FindFirstObjectByType<uiManager>();
-
-        // WriteNewGun("1", "Pistol", "classic", 10, "Medium", 15);
-        // WriteNewGun("2", "Rifle", "Vandal", 35, "Long", 30);
     }
-
-    // private void WriteNewGun(string gunID, string type, string weapon, int damage, string range, int capacity)
-    // {
-    //     Guns gun = new Guns(type, weapon, damage, range, capacity);
-    //     string json = JsonUtility.ToJson(gun);
-
-    //     mDatabaseRef.Child("Guns").Child(gunID).SetRawJsonValueAsync(json);
-    // }
 }
