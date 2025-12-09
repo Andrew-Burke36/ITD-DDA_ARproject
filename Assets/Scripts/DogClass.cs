@@ -1,21 +1,29 @@
 // Created by Andrew Burke and Vonce Chew
 
-public class Dog
+public class DogClass
 {
-    public int Age;
-    public string Breed;
     public string Name;
-    public float Weight;
-    public bool IsAdopted;
+
+    public string Age;
+
+    public string Breed;
+
+    public string Personality;
+
+    public string Shortbio;
 
     // Constructor class for Dog
-    public Dog(int age, string breed, string name, float weight, bool isAdopted)
+    public DogClass(string Name, string Age, string Breed, string Personality, string Shortbio)
     {
-        Age = age;
-        Breed = breed;
-        Name = name;
-        Weight = weight;
-        IsAdopted = isAdopted;
+        this.Name = Name;
+
+        this.Age = Age;
+
+        this.Breed = Breed;
+
+        this.Personality = Personality;
+
+        this.Shortbio = Shortbio;
 
         // function here
     }

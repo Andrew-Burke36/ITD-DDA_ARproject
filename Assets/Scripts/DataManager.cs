@@ -133,51 +133,7 @@ public class DataManager : MonoBehaviour
             }
         });
     }
-
-    // dog information
-
-
-
-    // public void UpdateCRUD()
-    // {
-    //     // Update using UpdateChildrenAsync method
-    //     Dictionary<string, object> data = new Dictionary<string, object>();
-    //     data["damage"] = 25;
-    //     data["capacity"] = 20;
-    //     data["weapon"] = "Ghost";
-
-    //     // Push the update
-    //     mDatabaseRef.Child("Guns").Child("1").UpdateChildrenAsync(data);
-    // }
-
-    // public void DeleteCRUD()
-    // {
-    //     // Delete a value
-    //     mDatabaseRef.Child("Guns").Child("2").RemoveValueAsync();
-
-    // }
     
-    // public void RetrieveCRUD()
-    // {
-    //     // Retrieve the data
-    //     var retrieveData = mDatabaseRef.Child("Guns").Child("1").GetValueAsync();
-
-    //     retrieveData.ContinueWithOnMainThread(task =>
-    //     {
-    //         if (task.IsFaulted || task.IsCanceled)
-    //         {
-    //             Debug.Log("Error retrieving data");
-    //         }
-
-    //         if (task.IsCompleted)
-    //         {
-    //             string jsonValue = task.Result.GetRawJsonValue();
-    //             Guns gun = JsonUtility.FromJson<Guns>(jsonValue);
-    //             Debug.Log($"Data retrieved successfully: Type: {gun.type}, Weapon: {gun.weapon}, Damage: {gun.damage}, Range: {gun.range}, Capacity: {gun.capacity}");
-    //         }
-    //     });
-    // }
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

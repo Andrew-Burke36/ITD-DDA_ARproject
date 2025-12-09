@@ -3022,7 +3022,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 495704253}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 558497051}
+        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+        m_MethodName: PlayClickAudio
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &495704253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9945,6 +9957,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dogInfoCanvas: {fileID: 1488591939}
+  dogNameText: {fileID: 0}
+  dogAgeText: {fileID: 0}
+  dogBreedText: {fileID: 0}
+  dogPersonalityText: {fileID: 0}
+  dogShortbioText: {fileID: 0}
+  dogName: 
 --- !u!1 &1482393950
 GameObject:
   m_ObjectHideFlags: 0
@@ -11964,9 +11982,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 5af3d8f3418024220abc7e440bf95068, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -11980,7 +11998,7 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
-  m_UseSpriteMesh: 0
+  m_UseSpriteMesh: 1
   m_PixelsPerUnitMultiplier: 1
 --- !u!222 &1856413599
 CanvasRenderer:
