@@ -977,7 +977,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &154671464
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2302,7 +2302,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &374782152
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3023,6 +3023,30 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
+      - m_Target: {fileID: 2099970473}
+        m_TargetAssemblyTypeName: uiManager, Assembly-CSharp
+        m_MethodName: EnablePages
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: HomePage
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2099970473}
+        m_TargetAssemblyTypeName: uiManager, Assembly-CSharp
+        m_MethodName: DisablePages
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: InGameUI
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 558497051}
         m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
         m_MethodName: PlayClickAudio
@@ -3483,7 +3507,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 558497050}
-  clickAudio: {fileID: 8300000, guid: 9fdb18992c8d04299b4ec3cc73cf4b46, type: 3}
+  clickAudio: {fileID: 8300000, guid: b967057e1b87e4fbab4e80102dacb0cb, type: 3}
   dogBarkAudio: {fileID: 8300000, guid: e895b617581f44d3eb4f53f414f680d8, type: 3}
 --- !u!4 &558497052
 Transform:
@@ -10058,6 +10082,18 @@ MonoBehaviour:
           m_StringArgument: HomePage
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 2099970473}
+        m_TargetAssemblyTypeName: uiManager, Assembly-CSharp
+        m_MethodName: EnablePages
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: InGameUI
+          m_BoolArgument: 0
+        m_CallState: 2
       - m_Target: {fileID: 558497051}
         m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
         m_MethodName: PlayClickAudio
@@ -11323,7 +11359,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: e2fea64a9d78f4dc59ccd1a761e30313, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.075
+  m_Volume: 0.025
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -11947,7 +11983,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1856413597
 RectTransform:
   m_ObjectHideFlags: 0
@@ -14051,6 +14087,8 @@ MonoBehaviour:
   loginUI: {fileID: 154671463}
   signUpUI: {fileID: 1748587666}
   homePageUI: {fileID: 964645998}
+  userAuthUI: {fileID: 374782151}
+  InGameUI: {fileID: 1856413596}
 --- !u!43 &2100510964
 Mesh:
   m_ObjectHideFlags: 0

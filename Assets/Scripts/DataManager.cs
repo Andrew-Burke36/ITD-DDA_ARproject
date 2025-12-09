@@ -116,6 +116,7 @@ public class DataManager : MonoBehaviour
                         case AuthError.WrongPassword:
                             validationText.text = "Wrong Password";
                             break;
+                        
                         default:
                             Debug.Log("Other error occurred: " + errorCode);
                             break;
@@ -128,7 +129,7 @@ public class DataManager : MonoBehaviour
                 validationText.text = $"Sign-in completed successfully!";
 
                 StartCoroutine(Delay());
-                uiManagerRef.DisablePages("LoginUI");
+                uiManagerRef.DisablePages("UserAuthUI");
                 uiManagerRef.EnablePages("HomePage");                
             }
         });

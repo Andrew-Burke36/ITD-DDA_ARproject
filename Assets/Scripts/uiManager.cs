@@ -24,6 +24,19 @@ public class uiManager : MonoBehaviour
     [Header("Home Page UI")]
     public GameObject homePageUI;
 
+    [Header("Others")]
+    public GameObject userAuthUI;
+    public GameObject InGameUI;
+
+    void Start()
+    {
+        // Initialize UI states
+        if (signUpUI != null)
+        {
+            signUpUI.SetActive(false);
+        }
+    } 
+
     /// <summary>
     ///  Switches the UI panel for the login and sign up function
     /// </summary>
@@ -80,6 +93,30 @@ public class uiManager : MonoBehaviour
                 loginUI.SetActive(true);
             }
         }
+
+        else if (pageName == "SignUpUI")
+        {
+            if (signUpUI != null)
+            {
+                signUpUI.SetActive(true);
+            }
+        }
+
+        else if (pageName == "UserAuthUI")
+        {
+            if (userAuthUI != null)
+            {
+                userAuthUI.SetActive(true);
+            }
+        }
+
+        else if(pageName == "InGameUI")
+        {
+            if (InGameUI != null)
+            {
+                InGameUI.SetActive(true);
+            }
+        }
     }
 
     /// <summary>
@@ -100,6 +137,28 @@ public class uiManager : MonoBehaviour
             {
                 Console.WriteLine("Disabling Login UI");
                 loginUI.SetActive(false);
+            }
+        }
+        else if (pageName == "SignUpUI")
+        {
+            if (signUpUI != null)
+            {
+                signUpUI.SetActive(false);
+            }
+        }
+
+        else if (pageName == "UserAuthUI")
+        {
+            if (userAuthUI != null)
+            {
+                userAuthUI.SetActive(false);
+            }
+        }
+        else if(pageName == "InGameUI")
+        {
+            if (InGameUI != null)
+            {
+                InGameUI.SetActive(false);
             }
         }
     }
