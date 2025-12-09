@@ -1,3 +1,5 @@
+// Created by Andrew Burke
+
 using UnityEngine;
 
 public class FPSLock : MonoBehaviour

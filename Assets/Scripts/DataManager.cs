@@ -1,3 +1,5 @@
+// Created by Andrew Burke and Vonce Chew
+
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +8,6 @@ using Firebase.Database;
 using Firebase.Extensions;
 using Firebase.Auth;
 using TMPro;
-
 
 public class DataManager : MonoBehaviour
 {
@@ -132,6 +133,10 @@ public class DataManager : MonoBehaviour
             }
         });
     }
+
+    // dog information
+
+
 
     // public void UpdateCRUD()
     // {

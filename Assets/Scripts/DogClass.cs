@@ -1,3 +1,5 @@
+// Created by Andrew Burke and Vonce Chew
+
 public class Dog
 {
     public int Age;

@@ -1,3 +1,5 @@
+// Created by Vonce Chew
+
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour
@@ -16,6 +18,9 @@ public class SoundManager : MonoBehaviour
         audioSource.PlayOneShot(clickAudio); // Plays click audio once
     }
 
+    /// <summary>
+    /// Plays dog bark audio when button is clicked
+    /// </summary>
     public void PlayDogBarkAudio()
     {
         audioSource.PlayOneShot(dogBarkAudio); // Plays dog bark audio once

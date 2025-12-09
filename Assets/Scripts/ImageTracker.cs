@@ -1,3 +1,5 @@
+// Taken from ITD Learning Materials
+
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
