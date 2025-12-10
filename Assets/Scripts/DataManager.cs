@@ -22,6 +22,7 @@ public class DataManager : MonoBehaviour
     public TMP_InputField SignInEmailInput;
     public TMP_InputField SignInPasswordInput;
 
+    
     DatabaseReference mDatabaseRef;
     uiManager uiManagerRef;
     
@@ -31,6 +32,10 @@ public class DataManager : MonoBehaviour
         yield return new WaitForSeconds(2.5f);
     }
 
+    /// <summary>
+    /// This handles the sign up function for the player
+    /// Pushes the player's data into the database that can be retrieved later.
+    /// </summary>
     public void SignUp()
     {
         var signUpTask = FirebaseAuth.DefaultInstance.CreateUserWithEmailAndPasswordAsync(SignInEmailInput.text, SignInPasswordInput.text);
@@ -89,6 +94,10 @@ public class DataManager : MonoBehaviour
         });
     }
 
+    /// <summary>
+    /// This handles the sign in function for the player
+    /// Retrieves the player's data from the database.
+    /// </summary>
     public void SignIn()
     {
         var signInTask = FirebaseAuth.DefaultInstance.SignInWithEmailAndPasswordAsync(EmailInput.text, PasswordInput.text);
@@ -134,7 +143,42 @@ public class DataManager : MonoBehaviour
             }
         });
     }
-    
+
+    /// <summary>
+    /// This function will handle the initialization of the player's dog data
+    /// that will be pushed to their database profile
+    /// </summary>
+    public void InitializeDogData(string uid, DogClass adoptedDog)
+    {
+        if (uid == null || adoptedDog == null)
+        {
+            Debug.Log("Invalid user ID or dog data. Cannot initialize dog data.");
+            return;
+        }
+
+        // Create a custom dog data object into the user
+        string DogID = mDatabaseRef.Child("Players").Child(uid).Child("AdoptedDogs").Push().Key;
+
+        // Convert dog class into a json
+        string dogJson = JsonUtility.ToJson(adoptedDog);
+
+        // Push the dog data into the player's profile under AdoptedDogs
+        mDatabaseRef.Child("Players").Child(uid).Child("AdoptedDogs").Child(DogID)
+            .SetRawJsonValueAsync(dogJson)
+            .ContinueWithOnMainThread(task =>
+             {
+                if (task.IsCompleted)
+                 {
+                    Debug.Log("Dog data initialized successfully for user: " + uid);
+                 }
+                 else
+                 {
+                    Debug.Log("Failed to initialize dog data for user: " + uid);
+                 }
+             });
+        
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

@@ -4,11 +4,14 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.Rendering;
 using Firebase;
+using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Extensions;
+using System;
 
 public class DogInformationUI : MonoBehaviour
 {
+    [Header("Dog Information UI Elements")]
     // UI Variables and general variables
     public Canvas dogInfoCanvas; // Dog UI Canvas
 
@@ -23,6 +26,10 @@ public class DogInformationUI : MonoBehaviour
     public TMP_Text dogShortbioText; // Dog shortbio text
 
     public string dogName; // Used for checking which dog's data to retireve
+
+    // Initialize references
+    private DataManager dataManagerRef;
+    private DogClass dogData;
 
     /// <summary>
     /// Opens dog information UI when "about me" button is clicked
@@ -53,7 +60,7 @@ public class DogInformationUI : MonoBehaviour
             {
                 string json = task.Result.GetRawJsonValue(); // Loads json value
 
-                DogClass dogData = JsonUtility.FromJson<DogClass>(json);
+                dogData = JsonUtility.FromJson<DogClass>(json);
 
                 dogNameText.text = "Name: " + dogData.Name; // Appends dog name from database to on screen dog name text
 
@@ -69,6 +76,33 @@ public class DogInformationUI : MonoBehaviour
             }
         });
     }
+
+    /// <summary>
+    /// This function will handle the creating of the Dog data 
+    /// So that when the player adopts the dog, this class will be pushed to the data manager ref to be pushed 
+    /// to the player's profile in the database
+    /// </summary>
+    public void OnAdoptClicked()
+    {
+        FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;
+
+        if (user == null )
+        {
+            Debug.Log("No user is signed in. Cannot adopt dog.");
+            return;
+        }
+
+        if (dogData == null)
+        {
+            Debug.Log("No dog data loaded to adopt.");
+            return;
+        }
+
+        // Push the data to the class in the data manager
+        dataManagerRef.InitializeDogData(user.UserId, dogData);
+        Debug.Log("Dog data has been initialized for adoption.");
+    }
+    
 
     /// <summary>
     /// Closes dog information UI when "close" button is clicked
@@ -88,5 +122,6 @@ public class DogInformationUI : MonoBehaviour
         {
             dogInfoCanvas.gameObject.SetActive(false); // Ensures dog canvas is off at start
         }
+        dataManagerRef = FindFirstObjectByType<DataManager>();
     }
 }

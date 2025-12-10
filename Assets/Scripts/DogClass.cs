@@ -24,8 +24,11 @@ public class DogClass
         this.Personality = Personality;
 
         this.Shortbio = Shortbio;
+    }
 
-        // function here
+    public DogClass()
+    {
+        
     }
 }
 
