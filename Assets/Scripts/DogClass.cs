@@ -1,7 +1,26 @@
 // Created by Andrew Burke and Vonce Chew
 
+public class DogUIInformation
+{
+    public string Name;
+    public string Age;
+    public string Breed;
+    public string Personality;
+    public string Shortbio;
+
+    public DogUIInformation(string Name, string Age, string Breed, string Personality, string ShortBio)
+    {
+        this.Name = Name;
+        this.Age = Age;
+        this.Breed = Breed;
+        this.Personality = Personality;
+        this.Shortbio = ShortBio;
+    }
+}
+
 public class DogClass
 {
+    public string DogID;
     public string Name;
 
     public string Age;
@@ -10,11 +29,13 @@ public class DogClass
 
     public string Personality;
 
-    public string Shortbio;
+    public bool IsAdopted;
 
     // Constructor class for Dog
-    public DogClass(string Name, string Age, string Breed, string Personality, string Shortbio)
+    public DogClass(string Name, string Age, string Breed, string Personality, bool IsAdopted)
     {
+        this.DogID = System.Guid.NewGuid().ToString(); // Generates unique ID for each dog
+        
         this.Name = Name;
 
         this.Age = Age;
@@ -23,7 +44,7 @@ public class DogClass
 
         this.Personality = Personality;
 
-        this.Shortbio = Shortbio;
+        this.IsAdopted = IsAdopted;
     }
 
     public DogClass()

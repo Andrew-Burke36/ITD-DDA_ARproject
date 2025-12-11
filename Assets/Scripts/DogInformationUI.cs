@@ -8,6 +8,7 @@ using Firebase.Auth;
 using Firebase.Database;
 using Firebase.Extensions;
 using System;
+using UnityEngine.UI;
 
 public class DogInformationUI : MonoBehaviour
 {
@@ -25,11 +26,15 @@ public class DogInformationUI : MonoBehaviour
 
     public TMP_Text dogShortbioText; // Dog shortbio text
 
+    public Button AdoptMeBTN; // Adopt me button
+
     public string dogName; // Used for checking which dog's data to retireve
+
 
     // Initialize references
     private DataManager dataManagerRef;
-    private DogClass dogData;
+    private DogUIInformation dogData;
+    private DogClass dogPlayerData;
 
     /// <summary>
     /// Opens dog information UI when "about me" button is clicked
@@ -60,7 +65,9 @@ public class DogInformationUI : MonoBehaviour
             {
                 string json = task.Result.GetRawJsonValue(); // Loads json value
 
-                DogClass dogData = JsonUtility.FromJson<DogClass>(json);
+                dogData = JsonUtility.FromJson<DogUIInformation>(json);
+
+                dogPlayerData = new DogClass(dogData.Name, dogData.Age, dogData.Breed, dogData.Personality, true);
 
                 dogNameText.text = "Name: " + dogData.Name; // Appends dog name from database to on screen dog name text
 
@@ -73,6 +80,43 @@ public class DogInformationUI : MonoBehaviour
                 dogShortbioText.text = "Bio: " + dogData.Shortbio; // Appends dog shortbio from database to on screen dog personality text
                 
                 Debug.Log ("Dog information loaded successfully!");
+            }
+        });
+
+        // Disables adopt button if dog is already adopted
+        FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;
+        var adoptedDogData = db.Child("Players").Child(user.UserId).Child("AdoptedDogs").GetValueAsync();
+        
+        adoptedDogData.ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                bool isAdopted = false;
+
+                foreach (DataSnapshot dogSnapshot in snapshot.Children)
+                {
+                    DogClass adoptedDog = JsonUtility.FromJson<DogClass>(dogSnapshot.GetRawJsonValue());
+                    if (adoptedDog.Breed == dogData.Breed)
+                    {
+                        Debug.Log("Dog has already been adopted.");
+                        isAdopted = true;
+                        break;
+                    }
+                }
+
+                if (isAdopted)
+                {
+                    AdoptMeBTN.interactable = false; // Disables adopt me button if dog is already adopted
+                    AdoptMeBTN.GetComponentInChildren<TMP_Text>().text = "Adopted"; // Changes button text to "Adopted"
+                    Debug.Log("Adopt Me button disabled for adopted dog.");
+                }
+                else
+                {
+                    AdoptMeBTN.interactable = true; // Enables adopt me button if dog is not adopted
+                    AdoptMeBTN.GetComponentInChildren<TMP_Text>().text = "Adopt Me"; // Changes button text to "Adopt Me"
+                    Debug.Log("Adopt Me button enabled for unadopted dog.");
+                }
             }
         });
     }
@@ -99,7 +143,13 @@ public class DogInformationUI : MonoBehaviour
         }
 
         // Push the data to the class in the data manager
-        dataManagerRef.InitializeDogData(user.UserId, dogData);
+        dataManagerRef.InitializeDogData(user.UserId, dogPlayerData);
+
+        // Disables the button and changes text to adopted
+        AdoptMeBTN.interactable = false; // Disables adopt me button after adoption
+        AdoptMeBTN.GetComponentInChildren<TMP_Text>().text = "Adopted"; // Changes button text to "Adopted"
+        
+        // Debugging purposes
         Debug.Log("Dog data has been initialized for adoption.");
     }
     

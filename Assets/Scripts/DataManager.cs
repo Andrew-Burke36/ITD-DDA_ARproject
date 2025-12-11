@@ -22,13 +22,13 @@ public class DataManager : MonoBehaviour
     public TMP_InputField SignInEmailInput;
     public TMP_InputField SignInPasswordInput;
 
-    
+
     DatabaseReference mDatabaseRef;
     uiManager uiManagerRef;
- 
+
     [HideInInspector]
     public string currentObjective; // String that stores player's current objective
-    
+
 
     private IEnumerator Delay()
     {
@@ -53,7 +53,7 @@ public class DataManager : MonoBehaviour
 
         signUpTask.ContinueWithOnMainThread(signUpTask =>
         {
-            if ( signUpTask.IsFaulted )
+            if (signUpTask.IsFaulted)
             {
                 var baseException = signUpTask.Exception?.GetBaseException();
 
@@ -109,31 +109,31 @@ public class DataManager : MonoBehaviour
         {
             var baseException = signInTask.Exception?.GetBaseException();
 
-                if (baseException is FirebaseException)
-                {
-                    var firebaseException = baseException as FirebaseException;
-                    var errorCode = (AuthError)firebaseException.ErrorCode;
+            if (baseException is FirebaseException)
+            {
+                var firebaseException = baseException as FirebaseException;
+                var errorCode = (AuthError)firebaseException.ErrorCode;
 
-                    switch (errorCode)
-                    {
-                        case AuthError.MissingEmail:
-                            validationText.text = "Missing Email";
-                            break;
-                        case AuthError.MissingPassword:
-                            validationText.text = "Missing Password";
-                            break;
-                        case AuthError.InvalidEmail:
-                            validationText.text = "Invalid Email";
-                            break;
-                        case AuthError.WrongPassword:
-                            validationText.text = "Wrong Password";
-                            break;
-                        
-                        default:
-                            Debug.Log("Other error occurred: " + errorCode);
-                            break;
-                    }
+                switch (errorCode)
+                {
+                    case AuthError.MissingEmail:
+                        validationText.text = "Missing Email";
+                        break;
+                    case AuthError.MissingPassword:
+                        validationText.text = "Missing Password";
+                        break;
+                    case AuthError.InvalidEmail:
+                        validationText.text = "Invalid Email";
+                        break;
+                    case AuthError.WrongPassword:
+                        validationText.text = "Wrong Password";
+                        break;
+
+                    default:
+                        Debug.Log("Other error occurred: " + errorCode);
+                        break;
                 }
+            }
 
             if (task.IsCompleted)
             {
@@ -142,7 +142,7 @@ public class DataManager : MonoBehaviour
 
                 StartCoroutine(Delay());
                 uiManagerRef.DisablePages("UserAuthUI");
-                uiManagerRef.EnablePages("HomePage");           
+                uiManagerRef.EnablePages("HomePage");
             }
         });
     }
@@ -160,7 +160,7 @@ public class DataManager : MonoBehaviour
         }
 
         // Create a custom dog data object into the user
-        string DogID = mDatabaseRef.Child("Players").Child(uid).Child("AdoptedDogs").Push().Key;
+        string DogID = adoptedDog.DogID;
 
         // Convert dog class into a json
         string dogJson = JsonUtility.ToJson(adoptedDog);
@@ -170,16 +170,26 @@ public class DataManager : MonoBehaviour
             .SetRawJsonValueAsync(dogJson)
             .ContinueWithOnMainThread(task =>
              {
-                if (task.IsCompleted)
+                 if (task.IsCompleted)
                  {
-                    Debug.Log("Dog data initialized successfully for user: " + uid);
+                     Debug.Log("Dog data initialized successfully for user: " + uid);
                  }
                  else
                  {
-                    Debug.Log("Failed to initialize dog data for user: " + uid);
+                     Debug.Log("Failed to initialize dog data for user: " + uid);
                  }
              });
     }
+
+    /// <summary>
+    /// This function will check if the dog exists in the player's adopted dogs list
+    /// </summary>
+    // public async void DogAdopted(string uid, string dogName)
+    // {
+        
+    // }
+
+
 
     /// <summary>
     /// This function will handle the retrieving of the player's current objective
@@ -206,7 +216,7 @@ public class DataManager : MonoBehaviour
                 Player objective = JsonUtility.FromJson<Player>(playerData); // Deserializing
 
                 string currentObjectiveString = objective.CurrentObjective.ToString(); // Storing current player's objective in currentObjectiveNumber variable
-                
+
                 var objectiveData = mDatabaseRef.Child("Objectives").GetValueAsync(); // Reads the values of the objectives' data.
 
                 objectiveData.ContinueWithOnMainThread(task =>
@@ -214,7 +224,7 @@ public class DataManager : MonoBehaviour
                     if (task.IsCompleted)
                     {
                         DataSnapshot snapshot = task.Result;
-                        
+
                         // Checks if key exists
                         if (snapshot.HasChild(currentObjectiveString))
                         {
