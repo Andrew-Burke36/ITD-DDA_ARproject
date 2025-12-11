@@ -25,6 +25,9 @@ public class DataManager : MonoBehaviour
     
     DatabaseReference mDatabaseRef;
     uiManager uiManagerRef;
+ 
+    [HideInInspector]
+    public string currentObjective; // String that stores player's current objective
     
 
     private IEnumerator Delay()
@@ -40,9 +43,9 @@ public class DataManager : MonoBehaviour
     {
         var signUpTask = FirebaseAuth.DefaultInstance.CreateUserWithEmailAndPasswordAsync(SignInEmailInput.text, SignInPasswordInput.text);
 
-        void CreatePlayerDetails(string email, string username)
+        void CreatePlayerDetails(string email, string username, int currentObjective)
         {
-            Player newPlayer = new Player(email, username);
+            Player newPlayer = new Player(email, username, currentObjective);
             string json = JsonUtility.ToJson(newPlayer);
 
             mDatabaseRef.Child("Players").Child(signUpTask.Result.User.UserId).SetRawJsonValueAsync(json);
@@ -89,7 +92,7 @@ public class DataManager : MonoBehaviour
                 uiManagerRef.SwitchUI();
 
                 // Sends the player's details and player profile to the databaes
-                CreatePlayerDetails(SignInEmailInput.text, SignInUsernameInput.text);
+                CreatePlayerDetails(SignInEmailInput.text, SignInUsernameInput.text, 01);
             }
         });
     }
@@ -139,7 +142,7 @@ public class DataManager : MonoBehaviour
 
                 StartCoroutine(Delay());
                 uiManagerRef.DisablePages("UserAuthUI");
-                uiManagerRef.EnablePages("HomePage");                
+                uiManagerRef.EnablePages("HomePage");           
             }
         });
     }
@@ -176,7 +179,63 @@ public class DataManager : MonoBehaviour
                     Debug.Log("Failed to initialize dog data for user: " + uid);
                  }
              });
-        
+    }
+
+    /// <summary>
+    /// This function will handle the retrieving of the player's current objective
+    /// This is to update the objective text in the in game UI
+    /// </summary>
+    public void RetrieveCurrentObjective()
+    {
+        FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;
+
+        var playerCurrentObjective = mDatabaseRef.Child("Players").Child(user.UserId).GetValueAsync(); // Reads the values of the player's data
+
+        playerCurrentObjective.ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted || task.IsCanceled)
+            {
+                Debug.Log("Unable to load player's data");
+                return;
+            }
+
+            if (task.IsCompleted)
+            {
+                string playerData = task.Result.GetRawJsonValue(); // Gets json value 
+
+                Player objective = JsonUtility.FromJson<Player>(playerData); // Deserializing
+
+                string currentObjectiveString = objective.CurrentObjective.ToString(); // Storing current player's objective in currentObjectiveNumber variable
+                
+                var objectiveData = mDatabaseRef.Child("Objectives").GetValueAsync(); // Reads the values of the objectives' data.
+
+                objectiveData.ContinueWithOnMainThread(task =>
+                {
+                    if (task.IsCompleted)
+                    {
+                        DataSnapshot snapshot = task.Result;
+                        
+                        // Checks if key exists
+                        if (snapshot.HasChild(currentObjectiveString))
+                        {
+                            DataSnapshot keySnapshot = snapshot.Child(currentObjectiveString); // Gets child snapshot 
+
+                            string objectiveJsonValue = keySnapshot.Value.ToString(); // Gets string json value
+
+                            currentObjective = objectiveJsonValue;
+                        }
+                        else
+                        {
+                            Debug.Log("Key not found.");
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Failure to retrieve from database.");
+                    }
+                });
+            }
+        });
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

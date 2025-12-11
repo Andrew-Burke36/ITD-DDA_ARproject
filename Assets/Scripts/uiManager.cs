@@ -1,4 +1,4 @@
-// Created by Andrew Burke
+// Created by Andrew Burke and Vonce Chew
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +8,8 @@ using System;
 
 public class uiManager : MonoBehaviour
 {
+    public DataManager dataManager; // Reference point to datamanager script
+
     [Header("Login / Sign up UI")]
     // Ui elements variables
     public Button signUpButton;
@@ -26,7 +28,11 @@ public class uiManager : MonoBehaviour
 
     [Header("Others")]
     public GameObject userAuthUI;
+
+    [Header("In Game UI")]
     public GameObject InGameUI;
+
+    public TMP_Text objectiveText;
 
     void Start()
     {
@@ -161,5 +167,13 @@ public class uiManager : MonoBehaviour
                 InGameUI.SetActive(false);
             }
         }
+    }
+    
+    /// <summary>
+    /// This function updates the objective text
+    /// </summary>
+    public void UpdateObjectiveText()
+    {
+        objectiveText.text = dataManager.currentObjective;
     }
 }

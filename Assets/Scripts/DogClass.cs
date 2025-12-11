@@ -32,15 +32,18 @@ public class DogClass
     }
 }
 
-
 public class Player
 {
     public string Username;
     public string Email;
+    public int CurrentObjective;
 
-    public Player(string email, string username)
+    public Player(string email, string username, int currentObjective)
     {
-        Email = email;
-        Username = username;
+        this.Email = email;
+
+        this.Username = username;
+
+        this.CurrentObjective = currentObjective;
     }
 }

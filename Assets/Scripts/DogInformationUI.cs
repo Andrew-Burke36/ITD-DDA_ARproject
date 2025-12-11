@@ -60,7 +60,7 @@ public class DogInformationUI : MonoBehaviour
             {
                 string json = task.Result.GetRawJsonValue(); // Loads json value
 
-                dogData = JsonUtility.FromJson<DogClass>(json);
+                DogClass dogData = JsonUtility.FromJson<DogClass>(json);
 
                 dogNameText.text = "Name: " + dogData.Name; // Appends dog name from database to on screen dog name text
 
