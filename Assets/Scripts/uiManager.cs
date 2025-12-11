@@ -1,4 +1,4 @@
-// Created by Andrew Burke and Vonce Chew
+// Created by Andrew Burke and Vonce Chew to handle the UI management in the game.
 
 using UnityEngine;
 using UnityEngine.UI;
@@ -168,12 +168,25 @@ public class uiManager : MonoBehaviour
             }
         }
     }
+
+    public void TextUpdate(string type)
+    {
+        if (type == "Logout")
+        {
+            // Clear input fields and validation text on logout
+            dataManager.EmailInput.text = "";
+            dataManager.PasswordInput.text = "";
+            dataManager.validationText.text = "";
+        }
+    }
+
     
     /// <summary>
     /// This function updates the objective text
     /// </summary>
-    public void UpdateObjectiveText()
+    public void UpdateObjectiveText(string Objective)
     {
-        objectiveText.text = dataManager.currentObjective;
+        // objectiveText.text = dataManager.currentObjective;
+        objectiveText.text = Objective;
     }
 }

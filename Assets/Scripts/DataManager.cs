@@ -1,4 +1,4 @@
-// Created by Andrew Burke and Vonce Chew
+// Created by Andrew Burke and Vonce Chew to handle firebase data management such as authentication and database updating.
 
 using UnityEngine;
 using System.Collections;
@@ -8,6 +8,8 @@ using Firebase.Database;
 using Firebase.Extensions;
 using Firebase.Auth;
 using TMPro;
+using System;
+
 
 public class DataManager : MonoBehaviour
 {
@@ -25,6 +27,12 @@ public class DataManager : MonoBehaviour
 
     DatabaseReference mDatabaseRef;
     uiManager uiManagerRef;
+
+    private PlayerClass currentPlayer;
+    private PlayerClass loggedInPlayer;
+
+    // Player objective data
+    public int currentScannedPictures = 2;
 
     [HideInInspector]
     public string currentObjective; // String that stores player's current objective
@@ -45,7 +53,7 @@ public class DataManager : MonoBehaviour
 
         void CreatePlayerDetails(string email, string username, int currentObjective)
         {
-            Player newPlayer = new Player(email, username, currentObjective);
+            PlayerClass newPlayer = new PlayerClass(email, username, currentObjective);
             string json = JsonUtility.ToJson(newPlayer);
 
             mDatabaseRef.Child("Players").Child(signUpTask.Result.User.UserId).SetRawJsonValueAsync(json);
@@ -92,7 +100,7 @@ public class DataManager : MonoBehaviour
                 uiManagerRef.SwitchUI();
 
                 // Sends the player's details and player profile to the databaes
-                CreatePlayerDetails(SignInEmailInput.text, SignInUsernameInput.text, 01);
+                CreatePlayerDetails(SignInEmailInput.text, SignInUsernameInput.text, 1);
             }
         });
     }
@@ -107,44 +115,73 @@ public class DataManager : MonoBehaviour
 
         signInTask.ContinueWithOnMainThread(task =>
         {
-            var baseException = signInTask.Exception?.GetBaseException();
-
-            if (baseException is FirebaseException)
+            if (task.IsFaulted)
             {
-                var firebaseException = baseException as FirebaseException;
-                var errorCode = (AuthError)firebaseException.ErrorCode;
+                var baseException = signInTask.Exception?.GetBaseException();
 
-                switch (errorCode)
+                if (baseException is FirebaseException)
                 {
-                    case AuthError.MissingEmail:
-                        validationText.text = "Missing Email";
-                        break;
-                    case AuthError.MissingPassword:
-                        validationText.text = "Missing Password";
-                        break;
-                    case AuthError.InvalidEmail:
-                        validationText.text = "Invalid Email";
-                        break;
-                    case AuthError.WrongPassword:
-                        validationText.text = "Wrong Password";
-                        break;
+                    var firebaseException = baseException as FirebaseException;
+                    var errorCode = (AuthError)firebaseException.ErrorCode;
 
-                    default:
-                        Debug.Log("Other error occurred: " + errorCode);
-                        break;
+                    switch (errorCode)
+                    {
+                        case AuthError.MissingEmail:
+                            validationText.text = "Missing Email";
+                            break;
+                        case AuthError.MissingPassword:
+                            validationText.text = "Missing Password";
+                            break;
+                        case AuthError.InvalidEmail:
+                            validationText.text = "Invalid Email";
+                            break;
+                        case AuthError.WrongPassword:
+                            validationText.text = "Wrong Password";
+                            break;
+                        case AuthError.UserNotFound:
+                            validationText.text = "User not found";
+                            break;
+                        default:
+                            validationText.text = "Error logging in, invalid email or password.";
+                            break;
+                    }
                 }
+                return; 
             }
 
             if (task.IsCompleted)
             {
-                var uid = signInTask.Result.User.UserId;
-                validationText.text = $"Sign-in completed successfully!";
-
+                string uid = task.Result.User.UserId;
+                mDatabaseRef.Child("Players").Child(uid).GetValueAsync().ContinueWithOnMainThread(playerTask =>
+                {
+                    if (playerTask.IsCompleted)
+                    {
+                        string json = playerTask.Result.GetRawJsonValue();
+                        loggedInPlayer = JsonUtility.FromJson<PlayerClass>(json);
+                        currentPlayer = loggedInPlayer;
+                    }
+                });
+                validationText.text = "Sign-in completed successfully!";
+                
                 StartCoroutine(Delay());
                 uiManagerRef.DisablePages("UserAuthUI");
                 uiManagerRef.EnablePages("HomePage");
             }
         });
+    }
+
+    public void Logout()
+    {
+        FirebaseAuth.DefaultInstance.SignOut();
+        loggedInPlayer = null;
+
+        // Switches UI back to login screen
+        uiManagerRef.EnablePages("UserAuthUI");
+        uiManagerRef.DisablePages("HomePage");
+        uiManagerRef.DisablePages("InGameUI");
+
+        // Clear input fields and validation text on logout
+        uiManagerRef.TextUpdate("Logout");
     }
 
     /// <summary>
@@ -181,71 +218,134 @@ public class DataManager : MonoBehaviour
              });
     }
 
-    /// <summary>
-    /// This function will check if the dog exists in the player's adopted dogs list
-    /// </summary>
-    // public async void DogAdopted(string uid, string dogName)
-    // {
-        
-    // }
-
-
 
     /// <summary>
     /// This function will handle the retrieving of the player's current objective
     /// This is to update the objective text in the in game UI
     /// </summary>
-    public void RetrieveCurrentObjective()
+    // public void RetrieveCurrentObjective()
+    // {
+    //     FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;
+        
+    //     if (user == null)
+    //     {
+    //         Debug.Log("No user is signed in. Cannot retrieve current objective.");
+    //         return;
+    //     }
+
+    //     var playerCurrentObjective = mDatabaseRef.Child("Players").Child(user.UserId).GetValueAsync(); // Reads the values of the player's data
+
+    //     playerCurrentObjective.ContinueWithOnMainThread(task =>
+    //     {
+    //         if (task.IsFaulted || task.IsCanceled)
+    //         {
+    //             Debug.Log("Unable to load player's data");
+    //             return;
+    //         }
+
+    //         if (task.IsCompleted)
+    //         {
+    //             string playerData = task.Result.GetRawJsonValue(); // Gets json value 
+
+    //             Player objective = JsonUtility.FromJson<Player>(playerData); // Deserializing
+
+    //             string currentObjectiveString = objective.CurrentObjective.ToString(); // Storing current player's objective in currentObjectiveNumber variable
+
+    //             var objectiveData = mDatabaseRef.Child("Objectives").GetValueAsync(); // Reads the values of the objectives' data.
+
+    //             objectiveData.ContinueWithOnMainThread(task =>
+    //             {
+    //                 if (task.IsCompleted)
+    //                 {
+    //                     DataSnapshot snapshot = task.Result;
+
+    //                     // Checks if key exists
+    //                     if (snapshot.HasChild(currentObjectiveString))
+    //                     {
+    //                         DataSnapshot keySnapshot = snapshot.Child(currentObjectiveString); // Gets child snapshot 
+
+    //                         string objectiveJsonValue = keySnapshot.Value.ToString(); // Gets string json value
+
+    //                         currentObjective = objectiveJsonValue;
+    //                     }
+    //                     else
+    //                     {
+    //                         Debug.Log("Key not found.");
+    //                     }
+    //                 }
+    //                 else
+    //                 {
+    //                     Debug.Log("Failure to retrieve from database.");
+    //                 }
+    //             });
+    //         }
+    //     });
+    // }
+
+
+    // Objective updating
+    /// <summary>
+    /// This function will handle the updating of the player's data in the database
+    /// </summary>
+    public async void UpdatePlayer(PlayerClass player)
     {
         FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;
 
-        var playerCurrentObjective = mDatabaseRef.Child("Players").Child(user.UserId).GetValueAsync(); // Reads the values of the player's data
-
-        playerCurrentObjective.ContinueWithOnMainThread(task =>
+        if (user == null)
         {
-            if (task.IsFaulted || task.IsCanceled)
-            {
-                Debug.Log("Unable to load player's data");
-                return;
-            }
+            Debug.Log("No user is signed in. Cannot update player data.");
+            return;
+        }
 
-            if (task.IsCompleted)
-            {
-                string playerData = task.Result.GetRawJsonValue(); // Gets json value 
+        string json = JsonUtility.ToJson(player);
+        await mDatabaseRef.Child("Players").Child(user.UserId).SetRawJsonValueAsync(json);
+    }
 
-                Player objective = JsonUtility.FromJson<Player>(playerData); // Deserializing
+    /// <summary>
+    /// This function will handle the updating of the player's current objective in the database
+    /// </summary>
+    public async void UpdateCurrentObjective(PlayerClass player, int scoreReward, ObjectiveType objectiveType)
+    {
+        FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;
 
-                string currentObjectiveString = objective.CurrentObjective.ToString(); // Storing current player's objective in currentObjectiveNumber variable
+        if (!IsPlayerLoggedIn() || player != currentPlayer)
+        {
+            Debug.Log("No user was found, cannot update the current objective.");
+            return;
+        }
 
-                var objectiveData = mDatabaseRef.Child("Objectives").GetValueAsync(); // Reads the values of the objectives' data.
+        if (objectiveType == ObjectiveType.ScanDog)
+        {
+            // Add the score
+            player.Score += scoreReward;
+            player.CurrentObjective += 0.5f;
+        } else if (objectiveType == ObjectiveType.AdoptDog){
+            // Add the score
+            player.Score += scoreReward;
+            player.CurrentObjective += 1;
+        }
 
-                objectiveData.ContinueWithOnMainThread(task =>
-                {
-                    if (task.IsCompleted)
-                    {
-                        DataSnapshot snapshot = task.Result;
+        // Update necessary fields
+        var updateObjectives = new Dictionary<string, object>
+        {
+            {"Score", player.Score },
+            {"CurrentObjective", player.CurrentObjective },
+            {"ScannedPictures", player.ScannedPictures.ToArray() }
+        };
+        
+        await mDatabaseRef.Child("Players").Child(user.UserId).UpdateChildrenAsync(updateObjectives);
 
-                        // Checks if key exists
-                        if (snapshot.HasChild(currentObjectiveString))
-                        {
-                            DataSnapshot keySnapshot = snapshot.Child(currentObjectiveString); // Gets child snapshot 
+        Debug.Log("Objective updated, new objective: " + player.CurrentObjective);
+    }
 
-                            string objectiveJsonValue = keySnapshot.Value.ToString(); // Gets string json value
 
-                            currentObjective = objectiveJsonValue;
-                        }
-                        else
-                        {
-                            Debug.Log("Key not found.");
-                        }
-                    }
-                    else
-                    {
-                        Debug.Log("Failure to retrieve from database.");
-                    }
-                });
-            }
-        });
+    public PlayerClass GetLoggedInPlayer()
+    {
+        return loggedInPlayer;
+    }
+    public bool IsPlayerLoggedIn()
+    {
+        return loggedInPlayer != null && FirebaseAuth.DefaultInstance.CurrentUser != null;
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

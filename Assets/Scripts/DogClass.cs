@@ -1,5 +1,8 @@
-// Created by Andrew Burke and Vonce Chew
+// Created by Andrew Burke and Vonce Chew to provide classes for Dog and Player data structures.
 
+using System.Collections.Generic;
+using UnityEngine;
+[System.Serializable]
 public class DogUIInformation
 {
     public string Name;
@@ -53,18 +56,33 @@ public class DogClass
     }
 }
 
-public class Player
+public class PlayerClass
 {
     public string Username;
     public string Email;
-    public int CurrentObjective;
+    public float CurrentObjective;
 
-    public Player(string email, string username, int currentObjective)
+    // Objective parts
+    public int Score; 
+    public List<string> CompletedTasks = new List<string>();
+    public List<string> ScannedPictures;
+
+    public PlayerClass(string email, string username, int currentObjective)
     {
         this.Email = email;
-
         this.Username = username;
-
         this.CurrentObjective = currentObjective;
+    
+        this.Score = 0;
+        this.CompletedTasks = new List<string>();
+        this.ScannedPictures = new List<string>();
     }
+
+    public PlayerClass() {} // Deserializer constructor
+}
+
+public enum ObjectiveType
+{
+    ScanDog,
+    AdoptDog
 }

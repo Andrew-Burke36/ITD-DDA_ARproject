@@ -1,4 +1,4 @@
-// Created by Vonce Chew and Andrew Burke
+// Created by Vonce Chew and Andrew Burke to handle the Dog information UI in the game and etc.
 
 using UnityEngine;
 using TMPro;

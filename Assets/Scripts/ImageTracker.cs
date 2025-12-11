@@ -14,6 +14,8 @@ public class ImageTracker : MonoBehaviour
     [SerializeField]
     private GameObject[] placeablePrefabs;
 
+    public ObjectiveHandling objectiveHandlingRef;
+
     private Dictionary<string, GameObject> spawnedPrefabs = new Dictionary<string, GameObject>();
 
     private void Start()
@@ -69,6 +71,11 @@ public class ImageTracker : MonoBehaviour
                 spawnedPrefabs[trackedImage.referenceImage.name].transform.position = trackedImage.transform.position;
                 spawnedPrefabs[trackedImage.referenceImage.name].transform.rotation = trackedImage.transform.rotation;
                 spawnedPrefabs[trackedImage.referenceImage.name].SetActive(true);
+
+                if (objectiveHandlingRef != null)
+                {
+                    objectiveHandlingRef.DogScanned(trackedImage.referenceImage.name);
+                }
             }
         }
     }
