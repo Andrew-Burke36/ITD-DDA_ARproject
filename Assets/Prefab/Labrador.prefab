@@ -128,17 +128,17 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 194098863001397171}
-  m_LocalRotation: {x: 0, y: -0.7071068, z: 0.7071068, w: 0}
-  m_LocalPosition: {x: 0, y: 0, z: -245.07}
-  m_LocalScale: {x: 7.855548, y: 7.855548, z: 7.855548}
+  m_LocalRotation: {x: -0.13212888, y: 0.0052879583, z: -0.0063242125, w: 0.9911983}
+  m_LocalPosition: {x: 0, y: 0, z: -18.4}
+  m_LocalScale: {x: 1.398209, y: 1.398209, z: 1.398209}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8962707100697652920}
   m_Father: {fileID: 711478599592463807}
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 180}
+  m_LocalEulerAnglesHint: {x: 195.181, y: 180.722, z: 179.173}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 118.21}
+  m_AnchoredPosition: {x: 69, y: 9.1}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7369310948181820103
@@ -274,7 +274,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2960117788628319526}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: 0.99998236, z: -0, w: -0.0059383246}
   m_LocalPosition: {x: 266.84573, y: 1.6575717, z: -473.52936}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 0
@@ -284,7 +284,7 @@ Transform:
   - {fileID: 9124141289697541363}
   - {fileID: 2413981092544887339}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180.68, z: 0}
 --- !u!33 &2673346495108776881
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1692,9 +1692,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6863926589659142089}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
-        m_MethodName: PlayDogBarkAudio
+      - m_Target: {fileID: 434394920076583574}
+        m_TargetAssemblyTypeName: DogInformationUI, Assembly-CSharp
+        m_MethodName: OnAdoptClicked
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1704,13 +1704,13 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 434394920076583574}
+      - m_Target: {fileID: 7332841384005424253}
         m_TargetAssemblyTypeName: DogInformationUI, Assembly-CSharp
-        m_MethodName: OnAdoptClicked
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 

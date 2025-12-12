@@ -33,6 +33,7 @@ public class DogInformationUI : MonoBehaviour
 
     // Initialize references
     private DataManager dataManagerRef;
+    private ObjectiveHandling objectiveHandlingRef;
     private DogUIInformation dogData;
     private DogClass dogPlayerData;
 
@@ -148,6 +149,9 @@ public class DogInformationUI : MonoBehaviour
         // Disables the button and changes text to adopted
         AdoptMeBTN.interactable = false; // Disables adopt me button after adoption
         AdoptMeBTN.GetComponentInChildren<TMP_Text>().text = "Adopted"; // Changes button text to "Adopted"
+
+        // Update current objective for adopting dog
+        objectiveHandlingRef.DogAdopted(dogData.Name);
         
         // Debugging purposes
         Debug.Log("Dog data has been initialized for adoption.");
@@ -173,5 +177,6 @@ public class DogInformationUI : MonoBehaviour
             dogInfoCanvas.gameObject.SetActive(false); // Ensures dog canvas is off at start
         }
         dataManagerRef = FindFirstObjectByType<DataManager>();
+        objectiveHandlingRef = FindFirstObjectByType<ObjectiveHandling>();
     }
 }

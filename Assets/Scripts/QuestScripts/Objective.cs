@@ -8,4 +8,17 @@ public class Objective
     public string title;
     public int objectiveAmount;
     public int Reward;
+
+    public ObjectiveGoal goal;
+
+    public void CompleteObjective()
+    {
+        isActive = false;
+        Debug.Log("Objective completed");
+
+    }
+
+    
 }
+
+

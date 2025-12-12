@@ -9,6 +9,8 @@ using Firebase.Extensions;
 using Firebase.Auth;
 using TMPro;
 using System;
+using NUnit.Framework;
+using UnityEngine.SocialPlatforms;
 
 
 public class DataManager : MonoBehaviour
@@ -24,9 +26,9 @@ public class DataManager : MonoBehaviour
     public TMP_InputField SignInEmailInput;
     public TMP_InputField SignInPasswordInput;
 
-
     DatabaseReference mDatabaseRef;
     uiManager uiManagerRef;
+    Playe localPlayerObjRef;
 
     private PlayerClass currentPlayer;
     private PlayerClass loggedInPlayer;
@@ -51,9 +53,9 @@ public class DataManager : MonoBehaviour
     {
         var signUpTask = FirebaseAuth.DefaultInstance.CreateUserWithEmailAndPasswordAsync(SignInEmailInput.text, SignInPasswordInput.text);
 
-        void CreatePlayerDetails(string email, string username, int currentObjective)
+        void CreatePlayerDetails(string email, string username, ObjectiveTypes currentObjective)
         {
-            PlayerClass newPlayer = new PlayerClass(email, username, currentObjective);
+            PlayerClass newPlayer = new PlayerClass(email, username, currentObjective, 0, 0);
             string json = JsonUtility.ToJson(newPlayer);
 
             mDatabaseRef.Child("Players").Child(signUpTask.Result.User.UserId).SetRawJsonValueAsync(json);
@@ -100,7 +102,7 @@ public class DataManager : MonoBehaviour
                 uiManagerRef.SwitchUI();
 
                 // Sends the player's details and player profile to the databaes
-                CreatePlayerDetails(SignInEmailInput.text, SignInUsernameInput.text, 1);
+                CreatePlayerDetails(SignInEmailInput.text, SignInUsernameInput.text, ObjectiveTypes.scanDog);
             }
         });
     }
@@ -223,65 +225,62 @@ public class DataManager : MonoBehaviour
     /// This function will handle the retrieving of the player's current objective
     /// This is to update the objective text in the in game UI
     /// </summary>
-    // public void RetrieveCurrentObjective()
-    // {
-    //     FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;
+    public void RetrieveCurrentObjective()
+    {
+        FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;
         
-    //     if (user == null)
-    //     {
-    //         Debug.Log("No user is signed in. Cannot retrieve current objective.");
-    //         return;
-    //     }
+        if (user == null)
+        {
+            Debug.Log("No user is signed in. Cannot retrieve current objective.");
+            return;
+        }
 
-    //     var playerCurrentObjective = mDatabaseRef.Child("Players").Child(user.UserId).GetValueAsync(); // Reads the values of the player's data
+        var playerCurrentObjective = mDatabaseRef.Child("Players").Child(user.UserId).GetValueAsync(); // Reads the values of the player's data
 
-    //     playerCurrentObjective.ContinueWithOnMainThread(task =>
-    //     {
-    //         if (task.IsFaulted || task.IsCanceled)
-    //         {
-    //             Debug.Log("Unable to load player's data");
-    //             return;
-    //         }
+        playerCurrentObjective.ContinueWithOnMainThread(task =>
+        {
+            if (task.IsFaulted || task.IsCanceled)
+            {
+                Debug.Log("Unable to load player's data");
+                return;
+            }
 
-    //         if (task.IsCompleted)
-    //         {
-    //             string playerData = task.Result.GetRawJsonValue(); // Gets json value 
+            if (task.IsCompleted)
+            {
+                string playerData = task.Result.GetRawJsonValue(); // Gets json value 
 
-    //             Player objective = JsonUtility.FromJson<Player>(playerData); // Deserializing
+                PlayerClass objective = JsonUtility.FromJson<PlayerClass>(playerData); // Deserializing
 
-    //             string currentObjectiveString = objective.CurrentObjective.ToString(); // Storing current player's objective in currentObjectiveNumber variable
+                int currentObjective= (int)objective.CurrentObjective; // Storing current player's objective in currentObjectiveNumber variable
 
-    //             var objectiveData = mDatabaseRef.Child("Objectives").GetValueAsync(); // Reads the values of the objectives' data.
+                // Retrieves the necessary data from the objective to update the in game UI
+                int currentObjectiveProgress = objective.CurrentObjectiveProgress;
+                
 
-    //             objectiveData.ContinueWithOnMainThread(task =>
-    //             {
-    //                 if (task.IsCompleted)
-    //                 {
-    //                     DataSnapshot snapshot = task.Result;
+                // update the main game objectives for the player
+                localPlayerObjRef.objective.goal.currentAmount = currentObjectiveProgress;
+                localPlayerObjRef.objective.goal.objectiveType = objective.CurrentObjective;
 
-    //                     // Checks if key exists
-    //                     if (snapshot.HasChild(currentObjectiveString))
-    //                     {
-    //                         DataSnapshot keySnapshot = snapshot.Child(currentObjectiveString); // Gets child snapshot 
+                // Call to update the objective text in the in game UI
+                localPlayerObjRef.objective.title = GetObjectiveTitle(objective.CurrentObjective);
+                uiManagerRef.UpdateObjectiveText(localPlayerObjRef.objective.title);
+                
+            }
+        });
+    }
 
-    //                         string objectiveJsonValue = keySnapshot.Value.ToString(); // Gets string json value
-
-    //                         currentObjective = objectiveJsonValue;
-    //                     }
-    //                     else
-    //                     {
-    //                         Debug.Log("Key not found.");
-    //                     }
-    //                 }
-    //                 else
-    //                 {
-    //                     Debug.Log("Failure to retrieve from database.");
-    //                 }
-    //             });
-    //         }
-    //     });
-    // }
-
+    private string GetObjectiveTitle(ObjectiveTypes objectiveType)
+    {
+        switch (objectiveType)
+        {
+            case ObjectiveTypes.scanDog:
+                return "Scan Dogs";
+            case ObjectiveTypes.adoptDog:
+                return "Adopt Dogs";
+            default:
+                return "Unknown Objective";
+        }
+    }
 
     // Objective updating
     /// <summary>
@@ -301,10 +300,10 @@ public class DataManager : MonoBehaviour
         await mDatabaseRef.Child("Players").Child(user.UserId).SetRawJsonValueAsync(json);
     }
 
-    /// <summary>
-    /// This function will handle the updating of the player's current objective in the database
-    /// </summary>
-    public async void UpdateCurrentObjective(PlayerClass player, int scoreReward, ObjectiveType objectiveType)
+    // / <summary>
+    // / This function will handle the updating of the player's current objective in the database
+    // / </summary>
+    public async void UpdateCurrentObjective(PlayerClass player, ObjectiveTypes objectiveType)
     {
         FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;
 
@@ -313,24 +312,18 @@ public class DataManager : MonoBehaviour
             Debug.Log("No user was found, cannot update the current objective.");
             return;
         }
-
-        if (objectiveType == ObjectiveType.ScanDog)
+        if (objectiveType == ObjectiveTypes.scanDog)
         {
-            // Add the score
-            player.Score += scoreReward;
-            player.CurrentObjective += 0.5f;
-        } else if (objectiveType == ObjectiveType.AdoptDog){
-            // Add the score
-            player.Score += scoreReward;
-            player.CurrentObjective += 1;
+            player.CurrentObjectiveProgress = localPlayerObjRef.objective.goal.currentAmount;
+            player.CurrentObjective = localPlayerObjRef.objective.goal.objectiveType;
         }
 
         // Update necessary fields
         var updateObjectives = new Dictionary<string, object>
         {
-            {"Score", player.Score },
-            {"CurrentObjective", player.CurrentObjective },
-            {"ScannedPictures", player.ScannedPictures.ToArray() }
+            {"CurrentObjectiveProgress", player.CurrentObjectiveProgress},
+            {"CurrentObjective", (int)player.CurrentObjective},
+            {"ScannedPictures", player.ScannedPictures.ToArray()}
         };
         
         await mDatabaseRef.Child("Players").Child(user.UserId).UpdateChildrenAsync(updateObjectives);
@@ -353,5 +346,6 @@ public class DataManager : MonoBehaviour
     {
         mDatabaseRef = FirebaseDatabase.DefaultInstance.RootReference;
         uiManagerRef = FindFirstObjectByType<uiManager>();
+        localPlayerObjRef = FindFirstObjectByType<Playe>();
     }
 }

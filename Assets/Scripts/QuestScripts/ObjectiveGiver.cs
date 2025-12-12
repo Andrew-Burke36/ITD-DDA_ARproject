@@ -1,27 +1,31 @@
+// This script was made to give the player the objectives from the quest givers in the game.
 using UnityEngine;
 
 public class QuestGiver : MonoBehaviour
 {
-    public Objective objective;
     public uiManager uiManagerRef;
-    
     public Playe playerRef;
 
-    private void QuestAccepted()
+    void Start() {
+        GiveNextQuest();
+    }
+
+    /// <summary>
+    /// This function gives the player the quest when they spawn into the game world and for the following quests.
+    /// </summary>
+    public void GiveNextQuest()
     {
-        if (uiManagerRef != null && playerRef != null)
+        if (playerRef.currentQuestIndex >= playerRef.questList.Count)
         {
-            objective.isActive = true;
-            uiManagerRef.UpdateObjectiveText(objective.title);
-            playerRef.objective = objective;
-        }
-        else
-        {
+            Debug.Log("No more quests available.");
             return;
         }
+        Objective nextQuest = playerRef.questList[playerRef.currentQuestIndex];
         
-    }
-    void Start() {
-        QuestAccepted();
+        nextQuest.isActive = true;
+        playerRef.objective = nextQuest;
+
+        uiManagerRef.UpdateObjectiveText(nextQuest.title);
+        Debug.Log($"New Quest Given: {nextQuest.title}");
     }
 }

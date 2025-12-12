@@ -60,18 +60,23 @@ public class PlayerClass
 {
     public string Username;
     public string Email;
-    public float CurrentObjective;
+    public ObjectiveTypes CurrentObjective;
+    public int CurrentObjectiveProgress;
+    public int CurrentQuestIndex;
 
     // Objective parts
     public int Score; 
     public List<string> CompletedTasks = new List<string>();
     public List<string> ScannedPictures;
+    public List<string> AdoptedDogs = new List<string>();
 
-    public PlayerClass(string email, string username, int currentObjective)
+    public PlayerClass(string email, string username, ObjectiveTypes currentObjective, int currentObjectiveProgress, int currentQuestIndex)
     {
         this.Email = email;
         this.Username = username;
         this.CurrentObjective = currentObjective;
+        this.CurrentObjectiveProgress = currentObjectiveProgress;
+        this.CurrentQuestIndex = currentQuestIndex;
     
         this.Score = 0;
         this.CompletedTasks = new List<string>();
@@ -79,10 +84,4 @@ public class PlayerClass
     }
 
     public PlayerClass() {} // Deserializer constructor
-}
-
-public enum ObjectiveType
-{
-    ScanDog,
-    AdoptDog
 }
