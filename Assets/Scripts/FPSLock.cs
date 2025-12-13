@@ -9,7 +9,7 @@ public class FPSLock : MonoBehaviour
     {
         // Disable vSync so Application.targetFrameRate takes effect
         QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 120;
+        Application.targetFrameRate = 60;
     }
 
     // Update is called once per frame

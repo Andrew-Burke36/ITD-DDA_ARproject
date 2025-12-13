@@ -42,7 +42,7 @@ public class ObjectiveHandling : MonoBehaviour
         {
             player.ScannedPictures.Add(dogID);
 
-            if (player.ScannedPictures.Count <= dataManagerRef.currentScannedPictures)
+            if (player.ScannedPictures.Count <= playerRef.objective.goal.requiredAmount)
             { 
                 // Increment the objective goal
                 if (playerRef == null)
@@ -54,7 +54,7 @@ public class ObjectiveHandling : MonoBehaviour
                 {
                     // Call the scanning dog function in the objective goal taht updates the local object player 
                     // playerRef.objective.goal.ScanningDog();
-                    playerRef.objective.goal.ScanningDog();
+                    playerRef.objective.goal.IncrementProgress();
 
                     if (playerRef.objective.goal.IsReached())
                     {
@@ -62,7 +62,7 @@ public class ObjectiveHandling : MonoBehaviour
                     }
 
                     // Retrieves the local players data and pushes the updated objective progress to firebase for the logged player.
-                    dataManagerRef.UpdateCurrentObjective(player, ObjectiveTypes.scanDog);
+                    dataManagerRef.UpdateCurrentObjective(player);
                 }
             }
         }
@@ -72,6 +72,9 @@ public class ObjectiveHandling : MonoBehaviour
     {
         Debug.Log("Dog adopted called");
         var player = dataManagerRef.GetLoggedInPlayer();
+        
+        // check the output
+        Debug.Log(player);
 
         if (player == null)
         {
@@ -83,12 +86,12 @@ public class ObjectiveHandling : MonoBehaviour
             player.AdoptedDogs.Add(dogID);
         }
 
-        playerRef.objective.goal.AdoptingDog();
+        playerRef.objective.goal.IncrementProgress();
         if (playerRef.objective.goal.IsReached())
         {
             playerRef.CompleteQuest();
         }
-        dataManagerRef.UpdateCurrentObjective(player, ObjectiveTypes.adoptDog);
+        dataManagerRef.UpdateCurrentObjective(player);
 
     }
 }

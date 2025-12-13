@@ -171,7 +171,6 @@ public class DogInformationUI : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("Dog information UI is attatched to:" + gameObject.name);
         if (dogInfoCanvas != null && dogInfoCanvas.gameObject != null)
         {
             dogInfoCanvas.gameObject.SetActive(false); // Ensures dog canvas is off at start

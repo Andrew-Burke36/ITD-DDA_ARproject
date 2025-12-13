@@ -62,7 +62,7 @@ public class PlayerClass
     public string Email;
     public ObjectiveTypes CurrentObjective;
     public int CurrentObjectiveProgress;
-    public int CurrentQuestIndex;
+    public int CurrentObjectiveIndex;
 
     // Objective parts
     public int Score; 
@@ -70,13 +70,13 @@ public class PlayerClass
     public List<string> ScannedPictures;
     public List<string> AdoptedDogs = new List<string>();
 
-    public PlayerClass(string email, string username, ObjectiveTypes currentObjective, int currentObjectiveProgress, int currentQuestIndex)
+    public PlayerClass(string email, string username, ObjectiveTypes currentObjective, int currentObjectiveProgress, int currentObjectiveIndex)
     {
         this.Email = email;
         this.Username = username;
         this.CurrentObjective = currentObjective;
         this.CurrentObjectiveProgress = currentObjectiveProgress;
-        this.CurrentQuestIndex = currentQuestIndex;
+        this.CurrentObjectiveIndex = currentObjectiveIndex;
     
         this.Score = 0;
         this.CompletedTasks = new List<string>();

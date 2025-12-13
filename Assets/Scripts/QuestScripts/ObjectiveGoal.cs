@@ -20,22 +20,6 @@ public class ObjectiveGoal
     {
         currentAmount++;
     }
-
-    public void ScanningDog()
-    {
-        if (objectiveType == ObjectiveTypes.scanDog)
-        {
-            IncrementProgress();
-        }
-    }
-
-    public void AdoptingDog()
-    {
-        if (objectiveType == ObjectiveTypes.adoptDog)
-        {
-            IncrementProgress();
-        }
-    }
 }
 
 public enum ObjectiveTypes

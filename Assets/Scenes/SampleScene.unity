@@ -2347,7 +2347,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3938e9281a0494f77841c8961902b024, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3354,7 +3354,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Labrador
+  m_Name: Corgi
   m_Shader: {fileID: 10752, guid: 0000000000000000f000000000000000, type: 0}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -3371,7 +3371,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 15926cf3848294ea8931d74216600c1d, type: 3}
+        m_Texture: {fileID: 2800000, guid: 0ea5d58519a9c4510900df247fa69f0a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -4374,6 +4374,7 @@ MonoBehaviour:
       objectiveType: 0
       requiredAmount: 0
       currentAmount: 0
+  objectiveGiverRef: {fileID: 0}
   questList:
   - isActive: 0
     title: Scan Dog
@@ -4393,7 +4394,7 @@ MonoBehaviour:
       objectiveType: 1
       requiredAmount: 1
       currentAmount: 0
-  currentQuestIndex: 0
+  currentObjectiveIndex: 0
   dataManagerRef: {fileID: 1761812226}
 --- !u!4 &677563880
 Transform:

@@ -29,8 +29,8 @@ public class DataManager : MonoBehaviour
     DatabaseReference mDatabaseRef;
     uiManager uiManagerRef;
     Playe localPlayerObjRef;
+    ObjectiveGiver objectiveGiverRef;
 
-    private PlayerClass currentPlayer;
     private PlayerClass loggedInPlayer;
 
     // Player objective data
@@ -154,21 +154,31 @@ public class DataManager : MonoBehaviour
             if (task.IsCompleted)
             {
                 string uid = task.Result.User.UserId;
-                mDatabaseRef.Child("Players").Child(uid).GetValueAsync().ContinueWithOnMainThread(playerTask =>
-                {
-                    if (playerTask.IsCompleted)
-                    {
-                        string json = playerTask.Result.GetRawJsonValue();
-                        loggedInPlayer = JsonUtility.FromJson<PlayerClass>(json);
-                        currentPlayer = loggedInPlayer;
-                    }
-                });
-                validationText.text = "Sign-in completed successfully!";
+                validationText.text = $"Sign-in completed successfully!";
                 
                 StartCoroutine(Delay());
                 uiManagerRef.DisablePages("UserAuthUI");
                 uiManagerRef.EnablePages("HomePage");
+
+                mDatabaseRef.Child("Players").Child(uid).GetValueAsync().ContinueWithOnMainThread(playerTask =>
+                {
+                    if (playerTask.IsFaulted)
+                    {
+                        Debug.Log("Failed to retrieve player data.");
+                        return;
+                    }
+                    if (playerTask.IsCompleted)
+                    {
+                        Debug.Log("objective loaded");
+                        string json = playerTask.Result.GetRawJsonValue();
+                        loggedInPlayer = JsonUtility.FromJson<PlayerClass>(json);
+                        
+                        // load in data ( test )
+                        RetrieveCurrentObjective();
+                    }
+                });
             }
+            
         });
     }
 
@@ -252,19 +262,21 @@ public class DataManager : MonoBehaviour
                 PlayerClass objective = JsonUtility.FromJson<PlayerClass>(playerData); // Deserializing
 
                 int currentObjective= (int)objective.CurrentObjective; // Storing current player's objective in currentObjectiveNumber variable
+                localPlayerObjRef.objective.goal.objectiveType = objective.CurrentObjective;
 
                 // Retrieves the necessary data from the objective to update the in game UI
                 int currentObjectiveProgress = objective.CurrentObjectiveProgress;
-                
-
-                // update the main game objectives for the player
                 localPlayerObjRef.objective.goal.currentAmount = currentObjectiveProgress;
-                localPlayerObjRef.objective.goal.objectiveType = objective.CurrentObjective;
+
+                // Set the data manager's current objective index
+                int currentObjIndex = objective.CurrentObjectiveIndex;
+                localPlayerObjRef.currentQuestIndex = currentObjIndex;
 
                 // Call to update the objective text in the in game UI
                 localPlayerObjRef.objective.title = GetObjectiveTitle(objective.CurrentObjective);
                 uiManagerRef.UpdateObjectiveText(localPlayerObjRef.objective.title);
-                
+
+                localPlayerObjRef.objectiveGiverRef.LoadQuest();
             }
         });
     }
@@ -303,27 +315,28 @@ public class DataManager : MonoBehaviour
     // / <summary>
     // / This function will handle the updating of the player's current objective in the database
     // / </summary>
-    public async void UpdateCurrentObjective(PlayerClass player, ObjectiveTypes objectiveType)
+    public async void UpdateCurrentObjective(PlayerClass player)
     {
         FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;
 
-        if (!IsPlayerLoggedIn() || player != currentPlayer)
+        if (!IsPlayerLoggedIn() || player != loggedInPlayer)
         {
             Debug.Log("No user was found, cannot update the current objective.");
             return;
         }
-        if (objectiveType == ObjectiveTypes.scanDog)
-        {
-            player.CurrentObjectiveProgress = localPlayerObjRef.objective.goal.currentAmount;
-            player.CurrentObjective = localPlayerObjRef.objective.goal.objectiveType;
-        }
+            
+        player.CurrentObjectiveProgress = localPlayerObjRef.objective.goal.currentAmount;
+        player.CurrentObjective = localPlayerObjRef.objective.goal.objectiveType;
+        player.CurrentObjectiveIndex = localPlayerObjRef.currentQuestIndex;
 
         // Update necessary fields
         var updateObjectives = new Dictionary<string, object>
         {
             {"CurrentObjectiveProgress", player.CurrentObjectiveProgress},
             {"CurrentObjective", (int)player.CurrentObjective},
-            {"ScannedPictures", player.ScannedPictures.ToArray()}
+            {"ScannedPictures", player.ScannedPictures.ToArray()},
+            {"CurrentObjectiveIndex", player.CurrentObjectiveIndex}
+
         };
         
         await mDatabaseRef.Child("Players").Child(user.UserId).UpdateChildrenAsync(updateObjectives);
