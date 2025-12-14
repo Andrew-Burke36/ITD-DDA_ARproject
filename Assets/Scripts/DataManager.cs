@@ -86,7 +86,11 @@ public class DataManager : MonoBehaviour
                         case AuthError.EmailAlreadyInUse:
                             validationText.text = "Email Already In Use";
                             break;
+                        case AuthError.InvalidEmail:
+                            validationText.text = "An invalid email was entered";
+                            break;
                         default:
+                            validationText.text = $"Invalid email or password was entered: {errorCode}" ;
                             Debug.Log("Other error occurred: " + errorCode);
                             break;
                     }
@@ -267,6 +271,10 @@ public class DataManager : MonoBehaviour
                 // Retrieves the necessary data from the objective to update the in game UI
                 int currentObjectiveProgress = objective.CurrentObjectiveProgress;
                 localPlayerObjRef.objective.goal.currentAmount = currentObjectiveProgress;
+
+                int requiredAmount = localPlayerObjRef.objective.goal.requiredAmount;
+
+                uiManagerRef.UpdateObjectiveProgress( currentObjectiveProgress, requiredAmount);
 
                 // Set the data manager's current objective index
                 int currentObjIndex = objective.CurrentObjectiveIndex;

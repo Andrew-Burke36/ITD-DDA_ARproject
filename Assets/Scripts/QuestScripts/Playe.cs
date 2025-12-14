@@ -16,6 +16,7 @@ public class Playe : MonoBehaviour
 
     [Header("Other stuff")]
     public DataManager dataManagerRef;
+    public uiManager uiManagerRef;
 
     void Start()
     {
@@ -30,6 +31,10 @@ public class Playe : MonoBehaviour
             {
                 playerID = dataManagerRef.GetLoggedInPlayer().Email;
             }
+        }
+        if (uiManagerRef == null)
+        {
+            uiManagerRef = FindAnyObjectByType<uiManager>();
         }
     }
     /// <summary>
@@ -49,6 +54,7 @@ public class Playe : MonoBehaviour
             {
                 currentQuestIndex--;
             }
+            uiManagerRef.EnablePages("EndGameUI");
             return;
         }
 

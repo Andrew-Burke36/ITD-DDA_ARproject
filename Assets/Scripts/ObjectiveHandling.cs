@@ -8,10 +8,11 @@ public class ObjectiveHandling : MonoBehaviour
 {
     [Header("References")]
     public DataManager dataManagerRef;
+    public uiManager uiManagerRef;
     public Playe playerRef;
     private string objectiveType;
 
-    
+
     [Header("Gameplay")]
     public int ScorePerScan = 1;
 
@@ -43,7 +44,7 @@ public class ObjectiveHandling : MonoBehaviour
             player.ScannedPictures.Add(dogID);
 
             if (player.ScannedPictures.Count <= playerRef.objective.goal.requiredAmount)
-            { 
+            {
                 // Increment the objective goal
                 if (playerRef == null)
                 {
@@ -55,6 +56,7 @@ public class ObjectiveHandling : MonoBehaviour
                     // Call the scanning dog function in the objective goal taht updates the local object player 
                     // playerRef.objective.goal.ScanningDog();
                     playerRef.objective.goal.IncrementProgress();
+                    uiManagerRef.UpdateObjectiveProgress(playerRef.objective.goal.currentAmount, playerRef.objective.goal.requiredAmount);
 
                     if (playerRef.objective.goal.IsReached())
                     {
@@ -72,7 +74,7 @@ public class ObjectiveHandling : MonoBehaviour
     {
         Debug.Log("Dog adopted called");
         var player = dataManagerRef.GetLoggedInPlayer();
-        
+
         // check the output
         Debug.Log(player);
 
@@ -87,11 +89,39 @@ public class ObjectiveHandling : MonoBehaviour
         }
 
         playerRef.objective.goal.IncrementProgress();
+        uiManagerRef.UpdateObjectiveProgress(playerRef.objective.goal.currentAmount, playerRef.objective.goal.requiredAmount);
         if (playerRef.objective.goal.IsReached())
         {
             playerRef.CompleteQuest();
         }
         dataManagerRef.UpdateCurrentObjective(player);
 
+    }
+
+    public void NameDog()
+    {
+        var player = dataManagerRef.GetLoggedInPlayer();
+        if (player == null)
+            return;
+
+        // Prevent double completion
+        if (playerRef.objective.goal.IsReached())
+            return;
+
+        playerRef.objective.goal.IncrementProgress();
+
+        uiManagerRef.UpdateObjectiveProgress(
+            playerRef.objective.goal.currentAmount,
+            playerRef.objective.goal.requiredAmount
+        );
+
+        if (playerRef.objective.goal.IsReached())
+        {
+            playerRef.CompleteQuest();
+        }
+
+        dataManagerRef.UpdateCurrentObjective(player);
+
+        Debug.Log("Name dog objective progressed");
     }
 }

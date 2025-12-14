@@ -34,6 +34,7 @@ public class ObjectiveGiver : MonoBehaviour
         playerRef.objective = currentQuest;
 
         uiManagerRef.UpdateObjectiveText(currentQuest.title);
+        uiManagerRef.UpdateObjectiveProgress(playerRef.objective.goal.currentAmount, playerRef.objective.goal.requiredAmount);
         Debug.Log($"Quest Loaded: {currentQuest.title}");
     }
 }

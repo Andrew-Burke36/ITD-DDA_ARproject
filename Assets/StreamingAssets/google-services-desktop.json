@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:604048557161:ios:b8f2b982c34e476470cef8",
+        "mobilesdk_app_id": "1:604048557161:ios:99f64691bbb8eda170cef8",
         "android_client_info": {
-          "package_name": "com.np.PuppyAdopt"
+          "package_name": "com.andrewburke.PuppyAdopt"
         }
       },
       "api_key": [

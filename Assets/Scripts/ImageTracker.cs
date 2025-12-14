@@ -17,6 +17,7 @@ public class ImageTracker : MonoBehaviour
     public ObjectiveHandling objectiveHandlingRef;
 
     private Dictionary<string, GameObject> spawnedPrefabs = new Dictionary<string, GameObject>();
+    private HashSet<string> scannedImages = new HashSet<string>();
 
     private void Start()
     {
@@ -58,7 +59,7 @@ public class ImageTracker : MonoBehaviour
 
     void UpdateImage(ARTrackedImage trackedImage)
     {
-        if(trackedImage != null)
+        if (trackedImage != null)
         {
             if (trackedImage.trackingState == TrackingState.Limited || trackedImage.trackingState == TrackingState.None)
             {
@@ -72,8 +73,9 @@ public class ImageTracker : MonoBehaviour
                 spawnedPrefabs[trackedImage.referenceImage.name].transform.rotation = trackedImage.transform.rotation;
                 spawnedPrefabs[trackedImage.referenceImage.name].SetActive(true);
 
-                if (objectiveHandlingRef != null)
+                if (objectiveHandlingRef != null && !scannedImages.Contains(trackedImage.referenceImage.name))
                 {
+                    scannedImages.Add(trackedImage.referenceImage.name);
                     objectiveHandlingRef.DogScanned(trackedImage.referenceImage.name);
                 }
             }

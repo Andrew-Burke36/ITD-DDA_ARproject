@@ -17,7 +17,7 @@ public class DogInformationUI : MonoBehaviour
     public Canvas dogInfoCanvas; // Dog UI Canvas
 
     public TMP_Text dogNameText; // Dog name text
-    
+
     public TMP_Text dogAgeText; // Dog age text
 
     public TMP_Text dogBreedText; // Dog breed text
@@ -29,6 +29,14 @@ public class DogInformationUI : MonoBehaviour
     public Button AdoptMeBTN; // Adopt me button
 
     public string dogName; // Used for checking which dog's data to retireve
+    
+
+    [Header("Edit name information UI elements")]
+    public Button editNameButton;
+    public Canvas editDogNameCanvas;
+    public TMP_Text currentDogNameText;
+    public TMP_InputField newDogNameText;
+    public Button editName;
 
 
     // Initialize references
@@ -37,6 +45,8 @@ public class DogInformationUI : MonoBehaviour
     private DogUIInformation dogData;
     private DogClass dogPlayerData;
 
+    private DogData dogData2;
+
     /// <summary>
     /// Opens dog information UI when "about me" button is clicked
     /// Loads dog information data from database and displays in UI
@@ -44,12 +54,12 @@ public class DogInformationUI : MonoBehaviour
     public void OnAboutMeClicked()
     {
         var db = FirebaseDatabase.DefaultInstance.RootReference;
-         
+
         if (dogInfoCanvas != null && dogInfoCanvas.gameObject != null)
         {
             dogInfoCanvas.gameObject.SetActive(true); // Turns on dog canvas when about me button is clicked
         }
-        
+
         // Data Retrieval
 
         var dogRetrieveData = db.Child("Dogs").Child(dogName).GetValueAsync(); // Retrieves data for whatever dog specified in "dogName" variable
@@ -65,8 +75,10 @@ public class DogInformationUI : MonoBehaviour
             if (task.IsCompleted)
             {
                 string json = task.Result.GetRawJsonValue(); // Loads json value
-
+                dogData2 = JsonUtility.FromJson<DogData>(json);
                 dogData = JsonUtility.FromJson<DogUIInformation>(json);
+                if (editNameButton != null)
+                    editNameButton.interactable = true; // Now player can edit name
 
                 dogPlayerData = new DogClass(dogData.Name, dogData.Age, dogData.Breed, dogData.Personality, true);
 
@@ -79,15 +91,15 @@ public class DogInformationUI : MonoBehaviour
                 dogPersonalityText.text = "Personality: " + dogData.Personality; // Appends dog personality from database to on screen dog personality text
 
                 dogShortbioText.text = "Bio: " + dogData.Shortbio; // Appends dog shortbio from database to on screen dog personality text
-                
-                Debug.Log ("Dog information loaded successfully!");
+
+                Debug.Log("Dog information loaded successfully!");
             }
         });
 
         // Disables adopt button if dog is already adopted
         FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;
         var adoptedDogData = db.Child("Players").Child(user.UserId).Child("AdoptedDogs").GetValueAsync();
-        
+
         adoptedDogData.ContinueWithOnMainThread(task =>
         {
             if (task.IsCompleted)
@@ -131,7 +143,7 @@ public class DogInformationUI : MonoBehaviour
     {
         FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;
 
-        if (user == null )
+        if (user == null)
         {
             Debug.Log("No user is signed in. Cannot adopt dog.");
             return;
@@ -152,11 +164,11 @@ public class DogInformationUI : MonoBehaviour
 
         // Update current objective for adopting dog
         objectiveHandlingRef.DogAdopted(dogData.Name);
-        
+
         // Debugging purposes
         Debug.Log("Dog data has been initialized for adoption.");
     }
-    
+
 
     /// <summary>
     /// Closes dog information UI when "close" button is clicked
@@ -169,13 +181,93 @@ public class DogInformationUI : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// This function updates the current dog's name on the edit information UI
+    /// </summary>
+    public void OnEditNameClicked()
+    {
+        if (dogPlayerData == null)
+        {
+            Debug.LogWarning("No dog loaded. Open dog info first!");
+            return;
+        }
+
+        if (editDogNameCanvas != null)
+            editDogNameCanvas.gameObject.SetActive(true);
+
+        if (currentDogNameText != null)
+            currentDogNameText.text = dogPlayerData.Name;
+
+        if (newDogNameText != null)
+            newDogNameText.text = "";
+    }
+
+    /// <summary>
+    /// This functions confirms the new dog's name when they press edit
+    /// </summary>
+    public void OnConfirmNameEdit()
+    {
+        FirebaseUser user = FirebaseAuth.DefaultInstance.CurrentUser;
+
+        if (user == null || dogPlayerData == null)
+        {
+            Debug.Log("Cannot rename dog – missing user or dog data");
+            return;
+        }
+
+        string newName = newDogNameText.text.Trim();
+
+        if (string.IsNullOrEmpty(newName))
+        {
+            Debug.Log("Dog name cannot be empty");
+            return;
+        }
+
+        string dogID = dogPlayerData.DogID;
+
+        //  Update Firebase in REAL TIME
+        FirebaseDatabase.DefaultInstance
+            .RootReference
+            .Child("Players")
+            .Child(user.UserId)
+            .Child("AdoptedDogs")
+            .Child(dogID)
+            .Child("Name")
+            .SetValueAsync(newName)
+            .ContinueWithOnMainThread(task =>
+            {
+                if (task.IsCompleted)
+                {
+                    // Update local UI
+                    dogPlayerData.Name = newName;
+                    dogNameText.text = "Name: " + newName;
+
+                    editDogNameCanvas.gameObject.SetActive(false);
+
+                    // ✅ Trigger objective
+                    objectiveHandlingRef.NameDog();
+
+                    Debug.Log("Dog name updated successfully");
+                }
+            });
+    }
+
     private void Start()
     {
         if (dogInfoCanvas != null && dogInfoCanvas.gameObject != null)
         {
             dogInfoCanvas.gameObject.SetActive(false); // Ensures dog canvas is off at start
         }
+
+        if (editDogNameCanvas != null)
+        {
+            editDogNameCanvas.gameObject.SetActive(false);
+        }
+
         dataManagerRef = FindFirstObjectByType<DataManager>();
         objectiveHandlingRef = FindFirstObjectByType<ObjectiveHandling>();
+
+        if (editNameButton != null)
+        editNameButton.interactable = false; // Disable until dog data loaded
     }
 }

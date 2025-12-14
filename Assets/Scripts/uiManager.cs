@@ -33,7 +33,9 @@ public class uiManager : MonoBehaviour
     public GameObject InGameUI;
 
     public TMP_Text objectiveText;
+    public TMP_Text objectiveProgressText;
     public GameObject ToyUI;
+    public GameObject EndGameUI;
 
     void Start()
     {
@@ -50,6 +52,11 @@ public class uiManager : MonoBehaviour
         if (ToyUI != null)
         {
             ToyUI.SetActive(false);
+        }
+
+        if(EndGameUI != null)
+        {
+            EndGameUI.SetActive(false);
         }
     } 
 
@@ -140,6 +147,13 @@ public class uiManager : MonoBehaviour
                 ToyUI.SetActive(true);
             }
         }
+        else if(pageName == "EndGameUI")
+        {
+            if(EndGameUI != null)
+            {
+                EndGameUI.SetActive(true);
+            }
+        }
 
     }
 
@@ -192,6 +206,13 @@ public class uiManager : MonoBehaviour
                 ToyUI.SetActive(false);
             }
         }
+        else if (pageName == "EndGameUI")
+        {
+            if (EndGameUI != null )
+            {
+                EndGameUI.SetActive(false);
+            }
+        }
     }
 
     public void TextUpdate(string type)
@@ -202,6 +223,14 @@ public class uiManager : MonoBehaviour
             dataManager.EmailInput.text = "";
             dataManager.PasswordInput.text = "";
             dataManager.validationText.text = "";
+        }
+    }
+
+    public void UpdateObjectiveProgress(int current, int required)
+    {
+        if (objectiveProgressText != null)
+        {
+            objectiveProgressText.text = $"Progress: {current} / {required}";
         }
     }
 

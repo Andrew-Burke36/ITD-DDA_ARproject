@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.np.PuppyAdopt</string>
+	<string>com.andrewburke.PuppyAdopt</string>
 	<key>PROJECT_ID</key>
 	<string>dda-sem-2-goon-squad</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,7 +25,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:604048557161:ios:b8f2b982c34e476470cef8</string>
+	<string>1:604048557161:ios:99f64691bbb8eda170cef8</string>
 	<key>DATABASE_URL</key>
 	<string>https://dda-sem-2-goon-squad-default-rtdb.asia-southeast1.firebasedatabase.app</string>
 </dict>

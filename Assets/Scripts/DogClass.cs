@@ -56,6 +56,16 @@ public class DogClass
     }
 }
 
+[System.Serializable]
+public class DogData
+{
+    public string Name;
+    public int Age;
+    public string Breed;
+    public string Personality;
+    public string Shortbio;
+}
+
 public class PlayerClass
 {
     public string Username;
