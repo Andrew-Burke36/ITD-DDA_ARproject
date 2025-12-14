@@ -33,6 +33,7 @@ public class uiManager : MonoBehaviour
     public GameObject InGameUI;
 
     public TMP_Text objectiveText;
+    public GameObject ToyUI;
 
     void Start()
     {
@@ -40,6 +41,15 @@ public class uiManager : MonoBehaviour
         if (signUpUI != null)
         {
             signUpUI.SetActive(false);
+        }
+        if (InGameUI != null)
+        {
+            InGameUI.SetActive(false);
+        }
+
+        if (ToyUI != null)
+        {
+            ToyUI.SetActive(false);
         }
     } 
 
@@ -123,6 +133,14 @@ public class uiManager : MonoBehaviour
                 InGameUI.SetActive(true);
             }
         }
+        else if(pageName == "ToyUI")
+        {
+            if (ToyUI != null)
+            {
+                ToyUI.SetActive(true);
+            }
+        }
+
     }
 
     /// <summary>
@@ -165,6 +183,13 @@ public class uiManager : MonoBehaviour
             if (InGameUI != null)
             {
                 InGameUI.SetActive(false);
+            }
+        }
+        else if (pageName == "ToyUI")
+        {
+            if (ToyUI != null)
+            {
+                ToyUI.SetActive(false);
             }
         }
     }

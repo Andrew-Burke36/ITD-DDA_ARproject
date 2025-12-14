@@ -18,16 +18,6 @@ MonoBehaviour:
     m_Storage: []
   m_Images:
   - m_SerializedGuid:
-      m_GuidLow: 4833661236976533524
-      m_GuidHigh: 4473997645247619720
-    m_SerializedTextureGuid:
-      m_GuidLow: 14146116118433355141
-      m_GuidHigh: 765513526685925385
-    m_Size: {x: 0.1, y: 0.2}
-    m_SpecifySize: 1
-    m_Name: Corgi
-    m_Texture: {fileID: 0}
-  - m_SerializedGuid:
       m_GuidLow: 5644071317498424070
       m_GuidHigh: 7675208095775991452
     m_SerializedTextureGuid:
@@ -46,16 +36,6 @@ MonoBehaviour:
     m_Size: {x: 0.1, y: 0.2}
     m_SpecifySize: 1
     m_Name: Dobermanout
-    m_Texture: {fileID: 0}
-  - m_SerializedGuid:
-      m_GuidLow: 4819891487476311946
-      m_GuidHigh: 8202232296881248956
-    m_SerializedTextureGuid:
-      m_GuidLow: 7276665889956287337
-      m_GuidHigh: 6857492677471210152
-    m_Size: {x: 0.1, y: 0.2}
-    m_SpecifySize: 1
-    m_Name: Husky
     m_Texture: {fileID: 0}
   - m_SerializedGuid:
       m_GuidLow: 5543223332082637179
